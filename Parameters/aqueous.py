@@ -1,3 +1,5 @@
+from collections import defaultdict
+
 import matplotlib.pyplot as plt
 
 from Parameters.utils import slicing, split, getComponents, searchComp
@@ -90,10 +92,14 @@ class Aqueous(object):
         return reactants
 
     def getReaction(self, comp_name):
-        parameters = self.getLine(comp_name, 0)
         dict_to_write = {}
+        x = self.getReactants(comp_name)
+        value = self.getStoichiometry(comp_name)
 
-        return len(parameters)
+        for i in range(0, len(x)):
+            dict_to_write[x[i]] = value[i]
+
+        return dict_to_write
 
     def plotGasK(self, compname):
         gases, aqueouss, minerals = self.getComponents()

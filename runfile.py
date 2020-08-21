@@ -21,6 +21,7 @@ print(aqu.getListOfEquilibriumConstants(inputs[0]))
 print(aqu.getEquilibriumConstantAtTemp(inputs[0], 25))
 print(aqu.getNumberOfReactingSpecies(inputs[0]))
 print(aqu.getReactants(inputs[0]))
+print(aqu.getReaction(inputs[0]))
 
 # print(mine.getInitialMolarVolume(inputs[1]))
 # print(mine.getMolarMass(inputs[1]))
