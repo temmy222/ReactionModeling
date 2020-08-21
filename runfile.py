@@ -1,5 +1,7 @@
 import os
 
+import numpy as np
+
 from Parameters.aqueous import Aqueous
 from Parameters.basis import Basis
 from Parameters.gases import Gases
@@ -14,19 +16,33 @@ mine = Mineral(dest1, filename)
 gaseous = Gases(dest1, filename)
 bases = Basis(dest1, filename)
 
-inputs = ['Ag+2', 'Adamite', 'Ar(g)', 'F-']
+inputs = ['Ag+2', 'Adamite', 'Br2(g)', 'F-']
 
-print(aqu.getMolarMass(inputs[0]))
-print(aqu.getListOfEquilibriumConstants(inputs[0]))
-print(aqu.getEquilibriumConstantAtTemp(inputs[0], 25))
-print(aqu.getNumberOfReactingSpecies(inputs[0]))
-print(aqu.getReactants(inputs[0]))
-print(aqu.getReaction(inputs[0]))
+# print(aqu.getMolarMass(inputs[0]))
+# print(aqu.getListOfEquilibriumConstants(inputs[0]))
+# print(aqu.getEquilibriumConstantAtTemp(inputs[0], 25))
+# print(aqu.getNumberOfReactingSpecies(inputs[0]))
+# print(aqu.getReactants(inputs[0]))
+# print(aqu.getRegressionCoefficients(inputs[0]))
+# print(aqu.getEquilibriumConstantAtTemp(inputs[0], 0))
 
 # print(mine.getInitialMolarVolume(inputs[1]))
 # print(mine.getMolarMass(inputs[1]))
+# print(mine.getNumberOfReactingSpecies(inputs[1]))
+# print(mine.getReactants(inputs[1]))
+# print(mine.getStoichiometry(inputs[1]))
+# print(mine.getReaction(inputs[1]))
+# print(mine.getListOfEquilibriumConstants(inputs[1]))
+# print(mine.getEquilibriumConstantAtTemp(inputs[1], 25))
 #
-# print(gaseous.getMolarMass(inputs[2]))
+print(gaseous.getMolarMass(inputs[2]))
+print(gaseous.getMolarDiameter(inputs[2]))
+print(gaseous.getNumberOfReactingSpecies(inputs[2]))
+print(gaseous.getStoichiometry(inputs[2]))
+print(gaseous.getReactants(inputs[2]))
+print(gaseous.getReaction(inputs[2]))
+print(gaseous.getListOfEquilibriumConstants(inputs[2]))
+print(gaseous.getEquilibriumConstantAtTemp(inputs[2], 25))
 #
 # print(bases.getMolarMass(inputs[3]))
 # print(bases.getHydratedRadius(inputs[3]))

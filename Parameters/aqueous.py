@@ -1,6 +1,7 @@
 from collections import defaultdict
 
 import matplotlib.pyplot as plt
+import numpy as np
 
 from Parameters.utils import slicing, split, getComponents, searchComp
 from pytough.t2listing import t2listing
@@ -50,14 +51,14 @@ class Aqueous(object):
         parameters = list(map(float, parameters))
         return parameters
 
-    def getEquilibriumConstantAtTemp(self, compName, Temp):
-        parameters = self.getListOfEquilibriumConstants(compName)
-        temperatures = getListOfTemperatures()
-        if Temp not in temperatures:
-            raise RuntimeError("the specified temperature is not in the list of temperatures. It can only be 0, 25, "
-                               "60, 100, 150, 200, 250, 300")
-        index_temp = temperatures.index(Temp)
-        return parameters[index_temp]
+    # def getEquilibriumConstantAtTemp(self, compName, Temp):
+    #     parameters = self.getListOfEquilibriumConstants(compName)
+    #     temperatures = getListOfTemperatures()
+    #     if Temp not in temperatures:
+    #         raise RuntimeError("the specified temperature is not in the list of temperatures. It can only be 0, 25, "
+    #                            "60, 100, 150, 200, 250, 300")
+    #     index_temp = temperatures.index(Temp)
+    #     return parameters[index_temp]
 
     def getHydratedRadius(self, comp_name):
         parameters = self.getLine(comp_name, 0)
@@ -100,6 +101,19 @@ class Aqueous(object):
             dict_to_write[x[i]] = value[i]
 
         return dict_to_write
+
+    def getRegressionCoefficients(self, comp_name):
+        parameters = self.getLine(comp_name, 2)
+        parameters = parameters[1:]
+        parameters = list(map(float, parameters))
+        return parameters
+
+    def getEquilibriumConstantAtTemp(self, comp_name, temp, unit='celsius'):
+        if unit.lower() == 'celsius':
+            temp = temp + 273.15
+        reg_coeff = self.getRegressionCoefficients(comp_name)
+        regression = reg_coeff[0]*np.log(temp) + reg_coeff[1] + reg_coeff[2]*temp + reg_coeff[3]/temp + reg_coeff[4]/temp**2
+        return regression
 
     def plotGasK(self, compname):
         gases, aqueouss, minerals = self.getComponents()

@@ -1,5 +1,7 @@
 import os
 
+import numpy as np
+
 from Parameters.utils import searchComp, getComponents
 
 
@@ -10,7 +12,6 @@ class Mineral(object):
     """
 
     def __init__(self, dest, file):
-
         """
         An instance of this class takes in two parameters;
 
@@ -39,3 +40,52 @@ class Mineral(object):
         molarMass = parameters[1]
         molarMass = float(molarMass)
         return molarMass
+
+    def getNumberOfReactingSpecies(self, comp_name):
+        parameters = self.getLine(comp_name, 0)
+        output = parameters[3]
+        output = float(output)
+        return output
+
+    def getReactants(self, comp_name):
+        parameters = self.getLine(comp_name, 0)
+        reactants = []
+        for i in range(5, len(parameters), 2):
+            reactants.append(parameters[i])
+        return reactants
+
+    def getStoichiometry(self, comp_name):
+        parameters = self.getLine(comp_name, 0)
+        reactants = []
+        for i in range(4, len(parameters), 2):
+            reactants.append(parameters[i])
+        return reactants
+
+    def getReaction(self, comp_name):
+        dict_to_write = {}
+        x = self.getReactants(comp_name)
+        value = self.getStoichiometry(comp_name)
+
+        for i in range(0, len(x)):
+            dict_to_write[x[i]] = value[i]
+
+        return dict_to_write
+
+    def getListOfEquilibriumConstants(self, compName):
+        parameters = self.getLine(compName, 1)
+        parameters = parameters[1:]
+        parameters = list(map(float, parameters))
+        return parameters
+
+    def getRegressionCoefficients(self, comp_name):
+        parameters = self.getLine(comp_name, 2)
+        parameters = parameters[1:]
+        parameters = list(map(float, parameters))
+        return parameters
+
+    def getEquilibriumConstantAtTemp(self, comp_name, temp, unit='celsius'):
+        if unit.lower() == 'celsius':
+            temp = temp + 273.15
+        reg_coeff = self.getRegressionCoefficients(comp_name)
+        regression = reg_coeff[0]*np.log(temp) + reg_coeff[1] + reg_coeff[2]*temp + reg_coeff[3]/temp + reg_coeff[4]/temp**2
+        return regression
