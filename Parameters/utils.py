@@ -12,6 +12,7 @@ def slicing(pattern, array):
     return many, index
 
 
+
 def split(array):
     m = {}
     for i in range(0, len(array)):
