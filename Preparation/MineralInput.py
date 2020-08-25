@@ -53,7 +53,7 @@ class MineralInput(object):
         for i in range(0, len(output)):
             middle = output[i][0]
             if middle.startswith("'") or re.match('^[a-zA-Z]+', middle):
-                temp_value.append(output[i])
+                temp_value.append(i)
         return temp_value
 
     def getAllConstituentMineralSpecies(self):
@@ -119,10 +119,142 @@ class MineralInput(object):
         return dissolution
 
     def getDissolutionRateConstants(self):
-        temp_value = []
         output = list(self.mineral_block.values())
         dissolution = self.determineDissolution()
+        mineral_line_index = self.getMineralLineIndex()
+        mineral_number = len(self.getMinerals())
+        dissolution_rate_constants = [None] * mineral_number
+        for i in range(0, len(mineral_line_index)):
+            if dissolution[i] is True:
+                index = mineral_line_index[i]+1
+                dissolution_rate_constants[i] = float(output[index][0])
+        return dissolution_rate_constants
 
+    def getDissolutionFirstExponent(self):
+        output = list(self.mineral_block.values())
+        dissolution = self.determineDissolution()
+        mineral_line_index = self.getMineralLineIndex()
+        mineral_number = len(self.getMinerals())
+        exponent = [None] * mineral_number
+        for i in range(0, len(mineral_line_index)):
+            if dissolution[i] is True:
+                index = mineral_line_index[i]+1
+                exponent[i] = float(output[index][2])
+        return exponent
 
-        return output
+    def getDissolutionSecondExponent(self):
+        output = list(self.mineral_block.values())
+        dissolution = self.determineDissolution()
+        mineral_line_index = self.getMineralLineIndex()
+        mineral_number = len(self.getMinerals())
+        exponent = [None] * mineral_number
+        for i in range(0, len(mineral_line_index)):
+            if dissolution[i] is True:
+                index = mineral_line_index[i]+1
+                exponent[i] = float(output[index][3])
+        return exponent
+    
+    def getDissolutionActivationEnergy(self):
+        output = list(self.mineral_block.values())
+        dissolution = self.determineDissolution()
+        mineral_line_index = self.getMineralLineIndex()
+        mineral_number = len(self.getMinerals())
+        activation_energy = [None] * mineral_number
+        for i in range(0, len(mineral_line_index)):
+            if dissolution[i] is True:
+                index = mineral_line_index[i]+1
+                activation_energy[i] = float(output[index][4])
+        return activation_energy
+
+    def getDissolutionMultipleMechanisms(self):
+        output = list(self.mineral_block.values())
+        dissolution = self.determineDissolution()
+        mineral_line_index = self.getMineralLineIndex()
+        mineral_number = len(self.getMinerals())
+        multi_mech = [None] * mineral_number
+        for i in range(0, len(mineral_line_index)):
+            if dissolution[i] is True:
+                index = mineral_line_index[i] + 1
+                multi_mech[i] = float(output[index][1])
+        return multi_mech
+    
+    def getPrecipitationRateConstants(self):
+        output = list(self.mineral_block.values())
+        kinetic = self.determinePrecipitation()
+        mineral_line_index = self.getMineralLineIndex()
+        mineral_number = len(self.getMinerals())
+        precipitation_rate_constants = [None] * mineral_number
+        multi_mech = self.getDissolutionMultipleMechanisms()
+        for i in range(0, len(mineral_line_index)):
+            if kinetic[i] is True and multi_mech[i] == 0:
+                index = mineral_line_index[i]+2
+                precipitation_rate_constants[i] = float(output[index][0])
+            elif kinetic[i] is True and multi_mech[i] != 0:
+                index = mineral_line_index[i] + 4
+                precipitation_rate_constants[i] = float(output[index][0])
+        return precipitation_rate_constants
+
+    def getPrecipitationFirstExponent(self):
+        output = list(self.mineral_block.values())
+        kinetic = self.determinePrecipitation()
+        mineral_line_index = self.getMineralLineIndex()
+        mineral_number = len(self.getMinerals())
+        dissolution_rate_constants = [None] * mineral_number
+        multi_mech = self.getDissolutionMultipleMechanisms()
+        for i in range(0, len(mineral_line_index)):
+            if kinetic[i] is True and multi_mech[i] == 0:
+                index = mineral_line_index[i]+2
+                dissolution_rate_constants[i] = float(output[index][2])
+            elif kinetic[i] is True and multi_mech[i] != 0:
+                index = mineral_line_index[i] + 4
+                dissolution_rate_constants[i] = float(output[index][2])
+        return dissolution_rate_constants
+
+    def getPrecipitationSecondExponent(self):
+        output = list(self.mineral_block.values())
+        kinetic = self.determinePrecipitation()
+        mineral_line_index = self.getMineralLineIndex()
+        mineral_number = len(self.getMinerals())
+        dissolution_rate_constants = [None] * mineral_number
+        multi_mech = self.getDissolutionMultipleMechanisms()
+        for i in range(0, len(mineral_line_index)):
+            if kinetic[i] is True and multi_mech[i] == 0:
+                index = mineral_line_index[i]+2
+                dissolution_rate_constants[i] = float(output[index][3])
+            elif kinetic[i] is True and multi_mech[i] != 0:
+                index = mineral_line_index[i] + 4
+                dissolution_rate_constants[i] = float(output[index][3])
+        return dissolution_rate_constants
+
+    def getPrecipitationActivationEnergy(self):
+        output = list(self.mineral_block.values())
+        kinetic = self.determinePrecipitation()
+        mineral_line_index = self.getMineralLineIndex()
+        mineral_number = len(self.getMinerals())
+        dissolution_rate_constants = [None] * mineral_number
+        multi_mech = self.getDissolutionMultipleMechanisms()
+        for i in range(0, len(mineral_line_index)):
+            if kinetic[i] is True and multi_mech[i] == 0:
+                index = mineral_line_index[i]+2
+                dissolution_rate_constants[i] = float(output[index][4])
+            elif kinetic[i] is True and multi_mech[i] != 0:
+                index = mineral_line_index[i] + 4
+                dissolution_rate_constants[i] = float(output[index][4])
+        return dissolution_rate_constants
+
+    def getPrecipitationInitialVolumeFraction(self):
+        output = list(self.mineral_block.values())
+        kinetic = self.determinePrecipitation()
+        mineral_line_index = self.getMineralLineIndex()
+        mineral_number = len(self.getMinerals())
+        dissolution_rate_constants = [None] * mineral_number
+        multi_mech = self.getDissolutionMultipleMechanisms()
+        for i in range(0, len(mineral_line_index)):
+            if kinetic[i] is True and multi_mech[i] == 0:
+                index = mineral_line_index[i]+2
+                dissolution_rate_constants[i] = float(output[index][8])
+            elif kinetic[i] is True and multi_mech[i] != 0:
+                index = mineral_line_index[i] + 4
+                dissolution_rate_constants[i] = float(output[index][8])
+        return dissolution_rate_constants
 
