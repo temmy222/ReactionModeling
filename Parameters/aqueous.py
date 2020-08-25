@@ -3,11 +3,10 @@ from collections import defaultdict
 import matplotlib.pyplot as plt
 import numpy as np
 
-from Parameters.utils import slicing, split, getComponents, searchComp
+from Parameters.utils import slicing, split, getComponents, searchComp, getCompNames
 from pytough.t2listing import t2listing
 import os
 import re
-
 
 
 def getListOfTemperatures():
@@ -103,6 +102,14 @@ class Aqueous(object):
 
         return dict_to_write
 
+    def getAllAqueousComplexes(self):
+        all_gases, all_liquid, all_minerals = getComponents(self.dest, self.file)
+        list_of_components = getCompNames(all_liquid)
+        temp = []
+        for specie in list_of_components:
+            temp.append(specie.strip("'"))
+        return temp
+
     def getRegressionCoefficients(self, comp_name):
         parameters = self.getLine(comp_name, 2)
         parameters = parameters[1:]
@@ -113,7 +120,6 @@ class Aqueous(object):
         if unit.lower() == 'celsius':
             temp = temp + 273.15
         reg_coeff = self.getRegressionCoefficients(comp_name)
-        regression = reg_coeff[0]*np.log(temp) + reg_coeff[1] + reg_coeff[2]*temp + reg_coeff[3]/temp + reg_coeff[4]/temp**2
+        regression = reg_coeff[0] * np.log(temp) + reg_coeff[1] + reg_coeff[2] * temp + reg_coeff[3] / temp + reg_coeff[
+            4] / temp ** 2
         return regression
-
-
