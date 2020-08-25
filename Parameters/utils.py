@@ -2,14 +2,19 @@ import os
 import re
 
 
-def slicing(pattern, array):
+def slicing(pattern, array, start_point=None):
     many = []
     index = []
-    for i in range(0, len(array)):
+    if start_point is None:
+        start_point = 0
+    for i in range(start_point, len(array)):
         if re.match(pattern, array[i]):
             many.append(array[i])
             index.append(i)
     return many, index
+
+def slicemid(pattern, array):
+    pass
 
 
 

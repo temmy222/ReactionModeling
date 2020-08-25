@@ -66,4 +66,13 @@ class ReadInput(object):
         param = split(param)
         return param
 
+    def readWaterData(self):
+        pattern = r"^# INITIAL AND BOUDARY WATER TYPES"
+        pattern2 = r"^#--------------"
+        listt, first_point = slicing(pattern, self.read_file)
+        listt, second_point = slicing(pattern2, self.read_file, first_point[0])
+        param = self.read_file[first_point[0] + 6:second_point[0] - 2]
+        param = split(param)
+        return param
+
 

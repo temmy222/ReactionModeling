@@ -13,7 +13,7 @@ chem_file = 'chemical.inp'
 prep = MineralInput(dest1, chem_file, filename)
 read = ReadInput(dest1, chem_file, filename)
 
-block = read.readMineralBlock()
+block = read.readWaterData()
 
 mineral_list = prep.getMinerals()
 mineral_constituents = prep.getAllConstituentMineralSpecies()
