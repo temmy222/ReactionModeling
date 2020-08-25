@@ -13,10 +13,6 @@ def slicing(pattern, array, start_point=None):
             index.append(i)
     return many, index
 
-def slicemid(pattern, array):
-    pass
-
-
 
 def split(array):
     m = {}
@@ -85,9 +81,7 @@ def getComponents(dest, file):
 
     return gases, aqueouss, minerals
 
+
 def diff_list(li1, li2):
     li_dif = [i for i in li1 + li2 if i not in li1 or i not in li2]
     return li_dif
-
-
-

@@ -57,7 +57,7 @@ class ReadInput(object):
         param = self.read_file[first_point[0] + 1:second_point[0] - 2]
         return param
 
-    def readMineralBlock(self):
+    def readMineralKineticBlock(self):
         pattern = r"^# MINERALS"
         pattern2 = r"^# GASES"
         listt, first_point = slicing(pattern, self.read_file)
@@ -74,5 +74,15 @@ class ReadInput(object):
         param = self.read_file[first_point[0] + 6:second_point[0] - 2]
         param = split(param)
         return param
+
+    def readMineralBlock(self):
+        pattern = r"^# INITIAL MINERAL ZONES"
+        pattern2 = r"^#--------------"
+        listt, first_point = slicing(pattern, self.read_file)
+        listt, second_point = slicing(pattern2, self.read_file, first_point[0])
+        param = self.read_file[first_point[0] + 4:second_point[0] - 2]
+        param = split(param)
+        return param
+
 
 
