@@ -7,6 +7,7 @@ from Parameters.aqueous import Aqueous
 from Parameters.basis import Basis
 from Parameters.gases import Gases
 from Parameters.mineral import Mineral
+from Preparation.MineralInput import MineralInput
 from Solver.preparation import Preparation
 
 dest1 = r"C:\Users\AJ\OneDrive - Louisiana State University\Second numerical paper\carbonate 2"
@@ -14,23 +15,20 @@ os.chdir(dest1)
 filename = 'thddem1214r3_hs.dat'
 chem_file = 'chemical.inp'
 
-aqu = Aqueous(dest1, filename)
-mine = Mineral(dest1, filename)
-gaseous = Gases(dest1, filename)
-bases = Basis(dest1, filename)
 
-prep = Preparation(dest1, chem_file, filename)
-mineral_block = prep.readMineralBlock()
+prep = MineralInput(dest1, chem_file, filename)
 mineral_list = prep.getMinerals()
-test = ['calcite']
 mineral_constituents = prep.getAllConstituentMineralSpecies()
-aqueous_species = prep.getBasisSpecies()
+mineral_line = prep.getMineralLine()
 miss = prep.checkAllMineralInBasis()
+kinetic = prep.determineKinetic()
+precipitate = prep.determinePrecipitation()
+dissolution = prep.determineDissolution()
+diss_rate_constants = prep.getDissolutionRateConstants()
 
 inputs = ['Ag+2', 'Adamite', 'Br2(g)', 'F-']
 
 
-species = mine.getReactants(inputs[1])
 
 #
 # print(bases.getMolarMass(inputs[3]))

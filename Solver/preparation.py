@@ -22,6 +22,10 @@ class Preparation(object):
         self.file = file
         os.chdir(dest)
         self.database = database
+        self.kinetic = False
+        self.equilibrium = False
+        self.dissolution = False
+        self.precipitation = False
 
     def readFile(self):
         f = open(self.file, 'r')
@@ -124,4 +128,3 @@ class Preparation(object):
         if all(x in aqueous for x in mineral_species):
             flag = True
         return flag
-
