@@ -15,7 +15,7 @@ class Mineral(object):
         """
         An instance of this class takes in two parameters;
 
-        file --> the name of the file
+        file --> the name of the file to be searched
         dest ---> where the file is located
         """
         self.dest = dest
