@@ -3,7 +3,9 @@ import os
 import autograd as ag
 import autograd.numpy as np
 import scipy.sparse as sps
-from scipy import linalg
+from scipy import linalg, sparse
+from scipy.sparse.linalg import gmres
+from scipy.sparse.linalg import spsolve
 from autograd import jacobian
 
 from Parameters.aqueous import Aqueous
@@ -43,8 +45,8 @@ def f3(x, y):
     return output
 
 
-def f4(x, rhs):
-    output = np.array([x[0] + (2 * x[1]) - rhs[0], x[0] ** 2 + 4 * x[1] ** 2 - rhs[1]])
+def f4(x, rhs, coeff1, coeff2, power1, power2):
+    output = np.array([coeff1[0] * x[0] ** power1[0] + (coeff2[0] * x[1] ** power2[0]) - rhs[0], coeff1[1] * x[0] ** power1[1] + coeff2[1] * x[1] ** power2[1] - rhs[1]])
     return output
 
 
@@ -57,7 +59,11 @@ def f(x, A):
 
 
 guess = np.array([1, 2], dtype=float)
-rhs = np.array([2, 4], dtype=float)
+rhs = np.array([-2, 0], dtype=float)
+coeff1 = np.array([3, 2], dtype=float)
+coeff2 = np.array([-1, -1], dtype=float)
+power1 = np.array([1, 2], dtype=float)
+power2 = np.array([1, 1], dtype=float)
 
 # x = np.array([3, 11, 5], dtype=float)
 # A = float(5)
@@ -67,8 +73,10 @@ rhs = np.array([2, 4], dtype=float)
 # timeline = np.linspace(1, 100, 4)
 # ag.jacobian(f)(np.array([1.0, 1.0]))
 
-# jac2 = ag.jacobian(f4)(guess)
+# jac2 = ag.jacobian(f4)(guess, rhs)
 # left_side = jac2
+# print(left_side)
+# try_sparse = sparse.csr_matrix(left_side)
 # right_side = -f4(guess)
 # print(f4(guess))
 # print(jac2)
@@ -78,15 +86,14 @@ newton_tol = 1e-6
 err = np.inf
 iteration_count = 0
 while err > newton_tol:
-    val = -f4(guess, rhs)
+    val = -f4(guess, rhs, coeff1, coeff2, power1, power2)
     iteration_count = iteration_count + 1
-    jac = ag.jacobian(f4)(guess, rhs)
-    dx = linalg.solve(jac, val)
+    jac = ag.jacobian(f4)(guess, rhs, coeff1, coeff2, power1, power2)
+    jac = sparse.csr_matrix(jac)
+    dx = spsolve(jac, val)
     guess = guess + dx
     print(err)
     err = np.sqrt(np.sum(val ** 2))
-
-
 
 # allspecies = aqueous.getAllAqueousComplexes()
 #
