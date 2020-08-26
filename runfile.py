@@ -1,6 +1,7 @@
 import os
 
 import numpy as np
+import scipy.sparse as sps
 
 from Parameters.aqueous import Aqueous
 from Preparation.MineralInput import MineralInput
@@ -8,6 +9,7 @@ from Preparation.MineralKineticInput import MineralKineticInput
 from Preparation.ReadInput import ReadInput
 from Preparation.WaterInput import WaterInput
 from Solver.preparation import Preparation
+from ad.forward_mode import Ad_array
 
 dest1 = r"C:\Users\AJ\OneDrive - Louisiana State University\Second numerical paper\carbonate 2"
 os.chdir(dest1)
@@ -30,6 +32,10 @@ def f1(x1, x2):
 def f2(x1, x2):
     output = x1 ** 2 + 4 * x2 ** 2 - 2
     return output
+
+
+p0 = np.zeros(2)
+p = Ad_array(p0, sps.diags(np.ones(p0.shape)))
 
 
 allspecies = aqueous.getAllAqueousComplexes()
