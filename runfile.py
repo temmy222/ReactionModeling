@@ -22,10 +22,17 @@ prep = Preparation(dest1, chem_file, filename)
 aqueous = Aqueous(dest1, filename)
 
 
+def f1(x1, x2):
+    output = x1 + 2 * x2 - 2
+    return output
+
+
+def f2(x1, x2):
+    output = x1 ** 2 + 4 * x2 ** 2 - 2
+    return output
 
 
 allspecies = aqueous.getAllAqueousComplexes()
-
 
 basis = prep.getAllAqueousComplexesInWater()
 
