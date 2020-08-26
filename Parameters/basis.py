@@ -6,7 +6,8 @@ from Parameters.utils import slicing, split, searchComp
 
 class Basis(object):
     """
-    This class helps in making plots for batch reactions carried out with TOUGHREACT
+    This class reads data from the supplied thermodynamic database in TOUGHREACT format from the basis or primary
+    species section of the database
 
     """
 
@@ -14,7 +15,7 @@ class Basis(object):
         """
         An instance of this class takes in two parameters;
 
-        file --> the name of the file
+        file --> the name of the file (thermodynamic database)
         dest ---> where the file is located
         """
         self.dest = dest

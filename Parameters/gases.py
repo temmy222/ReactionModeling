@@ -7,7 +7,8 @@ from Parameters.utils import getComponents, searchComp
 
 class Gases(object):
     """
-    This class helps in making plots for batch reactions carried out with TOUGHREACT
+    This class reads data from the supplied thermodynamic database in TOUGHREACT format from the gases
+    section of the database
 
     """
 
@@ -16,7 +17,7 @@ class Gases(object):
         """
         An instance of this class takes in two parameters;
 
-        file --> the name of the file
+        file --> the name of the file (thermodynamic database)
         dest ---> where the file is located
         """
         self.dest = dest

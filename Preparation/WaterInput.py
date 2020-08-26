@@ -7,12 +7,17 @@ from Preparation.ReadInput import ReadInput
 
 
 class WaterInput(object):
+    """
+    This class reads data from the supplied TOUGHREACT chemical.inp file. It reads only the water input section
+
+    """
     def __init__(self, dest, file, database):
         """
         An instance of this class takes in two parameters;
 
-        file --> the name of the file
+        file --> the name of the file (chemical.inp)
         dest ---> where the file is located
+        database ---> name of the thermodynamic database
         """
         self.dest = dest
         self.file = file

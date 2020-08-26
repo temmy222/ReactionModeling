@@ -7,7 +7,8 @@ from Parameters.utils import searchComp, getComponents
 
 class Mineral(object):
     """
-    This class helps in making plots for batch reactions carried out with TOUGHREACT
+    This class reads data from the supplied thermodynamic database in TOUGHREACT format from the mineral
+    section of the database
 
     """
 
@@ -15,7 +16,7 @@ class Mineral(object):
         """
         An instance of this class takes in two parameters;
 
-        file --> the name of the file to be searched
+        file --> the name of the file to be searched (thermodynamic database)
         dest ---> where the file is located
         """
         self.dest = dest

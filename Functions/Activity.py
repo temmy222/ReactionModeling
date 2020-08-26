@@ -13,8 +13,8 @@ class Activity(object):
         """
         An instance of this class takes in two parameters;
 
-        file --> the name of the file
-        dest ---> where the file is located
+        ion_conc --> concentration of all ions
+        ion_charges ---> charges of all ions
         """
         self.ion_conc = ion_conc
         self.ion_charges = ion_charges

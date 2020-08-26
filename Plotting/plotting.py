@@ -7,7 +7,7 @@ from Parameters.utils import getComponents, searchComp, convertToFloat
 
 class Plotting(object):
     """
-    This class helps in making plots for batch reactions carried out with TOUGHREACT
+    This class helps in making plots of data from the thermodynamic database in TOUGHREACT format
 
     """
 

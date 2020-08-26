@@ -4,12 +4,18 @@ from Parameters.utils import slicing, split
 
 
 class ReadInput(object):
+    """
+    This class reads blocks of data from each section of the supplied TOUGHREACT chemical.inp file for subsequent
+    processing by the various child classes.
+
+    """
     def __init__(self, dest, file, database):
         """
         An instance of this class takes in two parameters;
 
-        file --> the name of the file
+        file --> the name of the file (chemical.inp)
         dest ---> where the file is located
+        database ---> name of the thermodynamic database
         """
         self.dest = dest
         self.file = file

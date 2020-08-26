@@ -11,6 +11,10 @@ from Parameters.utils import slicing, split, diff_list
 
 
 class Preparation(object):
+    """
+    This class provides methods that prepares the solver for its calculations
+
+    """
     def __init__(self, dest, database, file):
 
         """
