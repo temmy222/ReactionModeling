@@ -1,7 +1,10 @@
 import os
 
-import numpy as np
+import autograd as ag
+import autograd.numpy as np
 import scipy.sparse as sps
+from scipy import linalg
+from autograd import jacobian
 
 from Parameters.aqueous import Aqueous
 from Preparation.MineralInput import MineralInput
@@ -26,6 +29,7 @@ aqueous = Aqueous(dest1, filename)
 
 def f1(x1, x2):
     output = x1 + 2 * x2 - 2
+    output = x1 ** 2 + 4 * x2 ** 2 - 2
     return output
 
 
@@ -34,13 +38,59 @@ def f2(x1, x2):
     return output
 
 
-p0 = np.zeros(2)
-p = Ad_array(p0, sps.diags(np.ones(p0.shape)))
+def f3(x, y):
+    output = np.array([x[0] ** 2, x[1] + y[1]])
+    return output
 
 
-allspecies = aqueous.getAllAqueousComplexes()
+def f4(x, rhs):
+    output = np.array([x[0] + (2 * x[1]) - rhs[0], x[0] ** 2 + 4 * x[1] ** 2 - rhs[1]])
+    return output
 
-basis = prep.getAllAqueousComplexesInWater()
+
+# f = lambda x, y: np.array([x[0] ** 2, x[0] + y[0]])
+# jacobian_f = jacobian(f3)(x1, y1)
+# print(jacobian_f(np.array([1., 1.])))
+
+def f(x, A):
+    return np.array([A * x[0] ** 2, x[1] ** 3, x[2] ** 2])
+
+
+guess = np.array([1, 2], dtype=float)
+rhs = np.array([2, 4], dtype=float)
+
+# x = np.array([3, 11, 5], dtype=float)
+# A = float(5)
+# jac = ag.jacobian(f)(x, A)
+# print(f(x, A))
+# print(jac)
+# timeline = np.linspace(1, 100, 4)
+# ag.jacobian(f)(np.array([1.0, 1.0]))
+
+# jac2 = ag.jacobian(f4)(guess)
+# left_side = jac2
+# right_side = -f4(guess)
+# print(f4(guess))
+# print(jac2)
+# x = linalg.solve(left_side, right_side)
+
+newton_tol = 1e-6
+err = np.inf
+iteration_count = 0
+while err > newton_tol:
+    val = -f4(guess, rhs)
+    iteration_count = iteration_count + 1
+    jac = ag.jacobian(f4)(guess, rhs)
+    dx = linalg.solve(jac, val)
+    guess = guess + dx
+    print(err)
+    err = np.sqrt(np.sum(val ** 2))
+
+
+
+# allspecies = aqueous.getAllAqueousComplexes()
+#
+# basis = prep.getAllAqueousComplexesInWater()
 
 # block = read.readWaterData()
 #
