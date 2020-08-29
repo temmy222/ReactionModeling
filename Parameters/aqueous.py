@@ -108,8 +108,19 @@ class Aqueous(object):
         list_of_components = getCompNames(all_liquid)
         temp = []
         for specie in list_of_components:
-            temp.append(specie.strip("'"))
+            specie = specie.strip("'")
+            if specie not in temp:
+                temp.append(specie)
         return temp
+
+    def getAllReactants(self):
+        all_complexes = self.getAllAqueousComplexes()
+        all_reactants = []
+        for complex in all_complexes:
+            all_reactants.append(self.getReactants(complex))
+        # [all_reactants.append(self.getReactants(complex)) for complex in all_complexes]
+        return all_reactants
+
 
     def getRegressionCoefficients(self, comp_name):
         parameters = self.getLine(comp_name, 2)
