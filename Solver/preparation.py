@@ -17,7 +17,7 @@ class Preparation(object):
 
     """
 
-    def __init__(self, dest, file, database):
+    def __init__(self, dest, file, database, water_species=None, gas_species=None, minerals=None):
 
         """
         An instance of this class takes in two parameters;
@@ -30,19 +30,36 @@ class Preparation(object):
         os.chdir(dest)
         self.database = database
         self.aqueous_species = Aqueous(self.dest, self.database)
-        self.water_input = WaterInput(self.dest, self.file, self.database)
+        self.water_species = water_species
+        self.water_input = WaterInput(self.dest, self.file, self.database, self.water_species)
 
     def getAllAqueousComplexesInWater(self):
-        all_aqueous = self.aqueous_species.getAllAqueousComplexes()
-        all_reactants = self.aqueous_species.getAllReactants()
-        water_species = self.water_input.getWaterSpecies()
-        water_species = list(map(lambda x: x.lower(), water_species))
-        if self.water_input.checkAllWaterInBasis() is True:
-            output = []
-            for i in range(0, len(all_reactants)):
-                temp = list(map(lambda x: x.lower()[1:-1], all_reactants[i]))
-                if all(x in water_species for x in temp):
-                    output.append(all_aqueous[i])
+        if self.water_species is None:
+            all_aqueous = self.aqueous_species.getAllAqueousComplexes()
+            all_reactants = self.aqueous_species.getAllReactants()
+            water_species = self.water_input.getWaterInput()
+            water_species = list(map(lambda x: x.lower(), water_species))
+            if self.water_input.checkAllWaterInBasis() is True:
+                output = []
+                for i in range(0, len(all_reactants)):
+                    temp = list(map(lambda x: x.lower()[1:-1], all_reactants[i]))
+                    if all(x in water_species for x in temp):
+                        output.append(all_aqueous[i])
+            else:
+                output = []
+                print('There are missing species')
         else:
-            print('There are missing species')
+            all_aqueous = self.aqueous_species.getAllAqueousComplexes()
+            all_reactants = self.aqueous_species.getAllReactants()
+            water_species = list(map(lambda x: x.lower(), self.water_species))
+            print(water_species)
+            if self.water_input.checkAllWaterInBasis(water_species) is True:
+                output = []
+                for i in range(0, len(all_reactants)):
+                    temp = list(map(lambda x: x.lower()[1:-1], all_reactants[i]))
+                    if all(x in water_species for x in temp):
+                        output.append(all_aqueous[i])
+            else:
+                output = []
+                print('There are missing species')
         return output
