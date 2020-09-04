@@ -86,6 +86,16 @@ class Aqueous(object):
             reactants.append(parameters[i])
         return reactants
 
+    def getLeftSide(self, comp_name):
+        parameters = self.getLine(comp_name, 0)
+        print(parameters)
+        lhs = []
+        for i in range(5, len(parameters), 2):
+            print(parameters[i])
+            if float(parameters[i]) > 0:
+                lhs.append(parameters[i + 1])
+        return lhs
+
     def getStoichiometry(self, comp_name):
         parameters = self.getLine(comp_name, 0)
         reactants = []
@@ -120,7 +130,6 @@ class Aqueous(object):
             all_reactants.append(self.getReactants(complex))
         # [all_reactants.append(self.getReactants(complex)) for complex in all_complexes]
         return all_reactants
-
 
     def getRegressionCoefficients(self, comp_name):
         parameters = self.getLine(comp_name, 2)

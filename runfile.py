@@ -1,6 +1,9 @@
 import os
 import time
+import numpy as np
 
+from Preparation.WaterInputUser import WaterInputUser
+from Solver.PreparationUser import PreparationUser
 from Solver.preparation import Preparation
 
 dest1 = r"C:\Users\AJ\OneDrive - Louisiana State University\Second numerical paper\carbonate 2"
@@ -9,12 +12,18 @@ filename = 'thddem1214r3_hs.dat'
 chem_file = 'chemical.inp'
 
 start = time.time()
-input_primary_species = ['Ca', 'OH-']
+input_primary_species = ['Ca+2', 'H2O', 'H+']
 
-prep = Preparation(dest1, chem_file, filename)
-data = prep.getAllAqueousComplexesInWater()
+# prep = Preparation(dest1, chem_file, filename)
+# data = prep.getAllAqueousComplexesInWater()
 
 
+prep_user = PreparationUser(dest1, filename, input_primary_species)
+aqu = prep_user.getAllAqueousComplexesInWater()
+
+data_user = prep_user.massBalance('CaOH+')
+
+print(np.zeros(2))
 
 end = time.time()
 print(end - start)
