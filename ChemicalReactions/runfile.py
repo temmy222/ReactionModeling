@@ -6,7 +6,7 @@ from Preparation.WaterInputUser import WaterInputUser
 from Solver.PreparationUser import PreparationUser
 from Solver.preparation import Preparation
 
-dest1 = r"C:\Users\AJ\OneDrive - Louisiana State University\Second numerical paper\carbonate 2"
+dest1 = r"C:\Users\AJ\OneDrive - Louisiana State University\Validation\Cement-Shale"
 os.chdir(dest1)
 filename = 'thddem1214r3_hs.dat'
 chem_file = 'chemical.inp'
