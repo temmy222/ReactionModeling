@@ -4,7 +4,10 @@ import matplotlib.style
 import matplotlib as mpl
 from scipy.integrate import odeint
 
+from Biodegradation.Biomass.BiomassBatch import BiomassBatch
+from Biodegradation.Plotting.plotting import Plotting
 from Biodegradation.Substrate.Monod import Monod
+from Biodegradation.Substrate.SubstrateBatch import SubstrateBatch
 
 mpl.style.use('classic')
 number_of_points = 1000
@@ -20,101 +23,50 @@ death_rate = 0.18
 yield_mass = 1.28
 
 monod = Monod(max_biomass_growth_rate, monod_constant, sub_values)
-growthe = monod.growth_rate()
-plt.plot(sub_values, growthe)
-plt.show()
+biomass_growth = monod.growth_rate()
+# plot = Plotting()
+# plot.plotMonod(sub_values, biomass_growth, 'Biomass Specific Growth Rate')
 
-def all_data(number_of_points, max_biomass_growth_rate, monod_constant, initial_sub_conc, initial_biomass_conc,
-             death_rate, yield_mass):
-    sub_values = np.linspace(0, 1000, number_of_points)
-    time = np.linspace(0.01, 10, number_of_points)
-    utilization_rate = np.zeros(len(sub_values))
-    inner_value = np.zeros(len(sub_values))
-    biomass_conc = np.zeros(len(sub_values))
-    sub_conc = np.zeros(len(sub_values))
-    utilization_rate = max_biomass_growth_rate * (sub_values / (monod_constant + sub_values))
-    inner_value = (utilization_rate - death_rate) * time
-    biomass_conc = initial_biomass_conc * np.exp(inner_value)
-    sub_conc = initial_sub_conc - (biomass_conc / yield_mass)
-    return utilization_rate, biomass_conc, sub_conc
+biomass = BiomassBatch(death_rate, initial_biomass_conc, time, biomass_growth)
+biomass_conc = biomass.biomass_concentration_analytical()
+# plot = Plotting()
+# plot.plotConcentration(time, biomass_conc, 'Biomass Concentration')
 
+sub = SubstrateBatch(death_rate, initial_biomass_conc, initial_sub_conc, time, biomass_growth, yield_mass)
+sub_conc = sub.substrate_concentration_analytical()
+# plot = Plotting()
+# plot.plotConcentration(time, sub_conc, 'Substrate Concentration')
 
-# utilization_rate = np.zeros(len(sub_conc))
-# inner_value = np.zeros(len(sub_conc))
-# biomass_conc = np.zeros(len(sub_conc))
-# for i in range(0, len(sub_conc)):
-#     utilization_rate[i] = (max_biomass_growth_rate * sub_conc[i]) / (michaelis_constant + sub_conc[i])
-#     inner_value[i] = (utilization_rate[i] - death_rate) * time[i]
-#     biomass_conc[i] = initial_biomass_conc * np.exp(inner_value[i])
+death_rates = [0.18, 0.28, 0.38]
+death_rates_label = ["Death Rate of 0.18", "Death Rate of 0.28", "Death Rate of 0.38"]
+yield_masses = [1.00, 1.28, 1.58]
+yield_rates_label = ["Yield Rate of 1.00", "Yield Rate of 1.28", "Yield Rate of 1.58"]
 
+biomass_death_multi = []
+sub_death_multi = []
 
-# def dX_dt(inputt , t):
-#     output = inputt[1] * inputt[0]
-#     return output
-#
-#
-# def dS_dt(S, X):
-#     output = -1 / yield_mass * (max_biomass_growth_rate * S / monod_constant + S) * X
-#     return output
-#
-# test=[0,0]
-# x_sol = odeint(dX_dt, test, time)
-# # sol = odeint(dS_dt, initial_sub_conc, biomass_conc)
+biomass_yield_multi = []
+sub_yield_multi = []
+for i in range(len(death_rates)):
+    biomass = BiomassBatch(death_rates[i], initial_biomass_conc, time, biomass_growth)
+    sub = SubstrateBatch(death_rates[i], initial_biomass_conc, initial_sub_conc, time, biomass_growth, yield_mass)
+    sub_conc = sub.substrate_concentration_analytical()
+    biomass_conc = biomass.biomass_concentration_analytical()
+    biomass_death_multi.append(biomass_conc)
+    sub_death_multi.append(sub_conc)
 
-util = []
-biomass = []
-substrate = []
-death_rate = [0.18, 0.28, 0.38]
-yield_mass = [1.00, 1.28, 1.58]
-for i in range(len(death_rate)):
-    utilization_rate, biomass_conc, sub_conc = all_data(number_of_points, max_biomass_growth_rate, monod_constant,
-                                                        initial_sub_conc, initial_biomass_conc, death_rate[0],
-                                                        yield_mass[i])
-    util.append(utilization_rate)
-    biomass.append(biomass_conc)
-    substrate.append(sub_conc)
+for i in range(len(yield_masses)):
+    sub = SubstrateBatch(death_rate, initial_biomass_conc, initial_sub_conc, time, biomass_growth, yield_masses[i])
+    sub_conc = sub.substrate_concentration_analytical()
+    sub_yield_multi.append(sub_conc)
 
-fig, axs = plt.subplots(1, 1)
-axs.plot(sub_values, util[0], label=yield_mass[0])
-axs.plot(sub_values, util[1], label=yield_mass[1])
-axs.plot(sub_values, util[2], label=yield_mass[2])
-axs.legend()
-axs.set_title('Sensitivity to Yield', fontsize=24)
-axs.set_xlabel("Substrate Concentration", fontsize=14)
-axs.set_ylabel("Biomass Specific Growth Rate", fontsize=14)
-plt.setp(axs.get_xticklabels(), fontsize=14)
-plt.setp(axs.get_yticklabels(), fontsize=14)
-plt.show()
-fig.savefig('Monod' '.png', bbox_inches='tight', dpi=600)
-
-fig, axs = plt.subplots(1, 1)
-axs.plot(sub_values, biomass[0], label=yield_mass[0])
-axs.plot(sub_values, biomass[1], label=yield_mass[1])
-axs.plot(sub_values, biomass[2], label=yield_mass[2])
-axs.legend()
-axs.set_title('Sensitivity to Yield', fontsize=24)
-axs.set_xlabel("Time (hours)", fontsize=14)
-axs.set_ylabel("Biomass Concentration (mg)", fontsize=14)
-plt.setp(axs.get_xticklabels(), fontsize=14)
-plt.setp(axs.get_yticklabels(), fontsize=14)
-plt.show()
-fig.savefig('Biomass Conc' '.png', bbox_inches='tight', dpi=600)
-#
-fig, axs = plt.subplots(1, 1)
-axs.plot(sub_values, substrate[0], label=yield_mass[0])
-axs.plot(sub_values, substrate[1], label=yield_mass[1])
-axs.plot(sub_values, substrate[2], label=yield_mass[2])
-axs.legend()
-axs.set_title('Sensitivity to Yield', fontsize=24)
-axs.set_xlabel("Time (hours)", fontsize=14)
-axs.set_ylabel("Substrate Concentration (mg)", fontsize=14)
-plt.setp(axs.get_xticklabels(), fontsize=14)
-plt.setp(axs.get_yticklabels(), fontsize=14)
-plt.show()
-fig.savefig('Substrate Conc' '.png', bbox_inches='tight', dpi=600)
-
-# plt.figure()
-# plt.plot(time, sol)
-# plt.xlabel("Time")
-# plt.ylabel("Substrate Concentration")
-# plt.show()
+plot = Plotting()
+plot.plotConcentrationMultiOnSingle(time, biomass_death_multi, 'Biomass Concentration', death_rates_label,
+                                    format="Biomass",
+                                    title="Death Rate Sensitivity Plots")
+plot.plotConcentrationMultiOnSingle(time, sub_death_multi, 'Substrate Concentration', death_rates_label,
+                                    format="Substrate",
+                                    title="Death Rate Sensitivity Plots")
+plot.plotConcentrationMultiOnSingle(time, sub_yield_multi, 'Substrate Concentration', yield_rates_label,
+                                    format="Substrate Yield",
+                                    title="Yield Sensitivity Plots")
