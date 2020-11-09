@@ -30,8 +30,8 @@ params = [miuvalue]
 y0 = [X0]
 
 # Make time array for solution
-tStop = 200.
-tInc = 10
+tStop = 2.
+tInc = 0.1
 t = np.arange(0., tStop, tInc)
 
 # Call the ODE solver
@@ -42,7 +42,8 @@ fig = plt.figure(1, figsize=(8, 8))
 
 # Plot theta as a function of time
 ax1 = fig.add_subplot(111)
-ax1.plot(t, psoln[:, 0], 'bo', t, X0 * np.exp(miuvalue * t), 'r-')
+temp = psoln[:, 0]
+ax1.plot(t, temp, 'bo', t, X0 * np.exp(miuvalue * t), 'r-')
 ax1.set_xlabel('time')
 ax1.set_ylabel('theta')
 plt.show()
