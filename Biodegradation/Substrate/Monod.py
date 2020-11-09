@@ -19,8 +19,14 @@ class Monod(object):
             Inc = 1 + self.S / Knc
             growth = (self.umax * self.S / (self.Ks + self.S)) / Inc
         elif Kc is not None and Knc is None and Kh is None:
-            Ic = 1 + self.S / Kc
-            growth = self.umax * self.S / ((self.Ks * Ic) + self.S)
+            if isinstance(Kc, list):
+                Ic =[]
+                for i in range(len(list)):
+                    Ic.append(self.S/Kc[i])
+                pass
+            else:
+                Ic = 1 + self.S / Kc
+                growth = self.umax * self.S / ((self.Ks * Ic) + self.S)
         elif Kh is not None and Knc is None and Kc is None:
             Ih = (self.S ** 2) / Kh
             growth = self.umax * self.S / (self.Ks + self.S + Ih)
