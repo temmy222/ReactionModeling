@@ -9,15 +9,16 @@ class BiomassBatch(object):
         self.biomass_growth_rate = biomass_growth_rate
 
     def biomass_concentration_analytical(self):
-        inner_value = (self.biomass_growth_rate - self.death_rate) * self.time
+        inner_value = (self.biomass_growth_rate - self.death_rate) * self.time[len(self.time)-1]
+        # inner_value = (0.86 - self.death_rate) * self.time
         biomass_X = self.initial_biomass * np.exp(inner_value)
         return biomass_X
 
     def biomass_concentration_numerical(self):
         biomass_X = np.repeat(self.initial_biomass, len(self.time))
-        print(biomass_X)
         for i in range(0, len(self.time) - 1):
             deltaT = self.time[i + 1] - self.time[i]
-            biomass_new = (self.biomass_growth_rate * deltaT * biomass_X) + biomass_X
+            inner_value = (self.biomass_growth_rate - self.death_rate)
+            biomass_new = (inner_value * deltaT * biomass_X) + biomass_X
             biomass_X = biomass_new
         return biomass_X

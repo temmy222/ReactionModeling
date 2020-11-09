@@ -36,12 +36,16 @@ class Plotting(object):
         plt.show()
         fig.savefig('Monod' + '.png', bbox_inches='tight', dpi=600)
 
-    def plotConcentrationMultiOnSingle(self, time, yValue, yLabel, label, format='Substrate', title='Sensitivity'):
+    def plotConcentrationMultiOnSingle(self, time, yValue, yLabel, label, format='Substrate', title='Sensitivity',
+                                       filename=' default'):
         fig, axs = plt.subplots(1, 1)
         for i in range(len(yValue)):
             axs.plot(time, yValue[i], label=label[i])
         axs.legend()
-        axs.set_xlabel('Time (hours)', fontsize=14)
+        if filename == 'Monod':
+            axs.set_xlabel('Substrate Concentration', fontsize=14)
+        else:
+            axs.set_xlabel('Time (hours)', fontsize=14)
         axs.set_ylabel(yLabel, fontsize=14)
         axs.set_title(title, fontsize=24)
         axs.ticklabel_format(useOffset=False)
@@ -49,4 +53,4 @@ class Plotting(object):
         plt.setp(axs.get_yticklabels(), fontsize=14)
         plt.tight_layout()
         plt.show()
-        fig.savefig(format + ' Concentration Sensitivity' + '.png', bbox_inches='tight', dpi=600)
+        fig.savefig(format + filename + '.png', bbox_inches='tight', dpi=600)

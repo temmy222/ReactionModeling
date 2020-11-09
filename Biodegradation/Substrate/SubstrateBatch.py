@@ -18,4 +18,5 @@ class SubstrateBatch(object):
                                          self.biomass_growth_rate)
         bio_concentration = biomass.biomass_concentration_analytical()
         sub_concentration = self.initial_substrate - (bio_concentration/self.yield_mass)
+        sub_concentration[sub_concentration < 0] = 0
         return sub_concentration
