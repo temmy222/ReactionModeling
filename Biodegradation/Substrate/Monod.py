@@ -20,9 +20,9 @@ class Monod(object):
             growth = (self.umax * self.S / (self.Ks + self.S)) / Inc
         elif Kc is not None and Knc is None and Kh is None:
             if isinstance(Kc, list):
-                Ic =[]
+                Ic = []
                 for i in range(len(list)):
-                    Ic.append(self.S/Kc[i])
+                    Ic.append(self.S / Kc[i])
                 pass
             else:
                 Ic = 1 + self.S / Kc
@@ -41,4 +41,13 @@ class Monod(object):
             growth = (self.umax * self.S) / ((self.Ks * Ic) + self.S + Ih) / Inc
         else:
             growth = self.umax * self.S / (self.Ks + self.S)
+        return growth
+
+    def growth_rate_new(self, component, inhibition):
+        competitive = inhibition.computeCompetitiveInhibition(component)
+        non_competitive = inhibition.computeNonCompetitiveInhibition(component)
+        haldane = inhibition.computeHaldaneInhibition(component)
+        numerator = (component.umax * component.conc)
+        denominator = (component.ks + competitive + component.conc + haldane) * non_competitive
+        growth = numerator/denominator
         return growth
