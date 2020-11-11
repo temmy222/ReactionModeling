@@ -9,12 +9,10 @@ rate = (max_rate * sub_conc) / michaelis_constant + sub_conc
 
 
 class Monod(object):
-    def __init__(self, umax, Ks, S):
-        self.umax = umax
-        self.Ks = Ks
-        self.S = S
+    def __init__(self):
+        pass
 
-    def growth_rate(self, Knc=None, Kc=None, Kh=None):
+    def growth_rate(self, umax, Ks, S, Knc=None, Kc=None, Kh=None):
         if Knc is not None and Kc is None and Kh is None:
             Inc = 1 + self.S / Knc
             growth = (self.umax * self.S / (self.Ks + self.S)) / Inc
