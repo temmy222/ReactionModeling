@@ -2,16 +2,20 @@ import numpy as np
 from scipy.integrate import odeint
 import matplotlib.pyplot as plt
 
+from Biodegradation.Biomass.biomass import Biomass
+from Biodegradation.Solver.Solver import Solver
 from Biodegradation.Substrate.Monod import Monod
 from Biodegradation.Substrate.inhibition import Inhibition
 from Biodegradation.Substrate.solution import Solution
 from Biodegradation.Substrate.substrate import Component
 
-c_pce = Component(0.2, 'PCE', 0.86, 13.6, 4.5, 5.7)
-c_tce = Component(0.29, 'TCE', 0.86, 33.6, 4.5, 5.7)
-c_dce = Component(0.2, 'DCE', 0.86, 23.6, 6.5, 5.7)
-c_vc = Component(0.2, 'VC', 1.86, 13.6, 6.5, 5.7)
-c_eth = Component(0.2, 'VC', 1.86, 13.6, 6.5, 5.7)
+c_pce = Component(1, 0.2, 'PCE', 0.86, 13.6, 4.5, 5.7)
+c_tce = Component(2, 0.29, 'TCE', 0.86, 33.6, 4.5, 5.7)
+c_dce = Component(3, 0.2, 'DCE', 0.86, 23.6, 6.5, 5.7)
+c_vc = Component(4, 0.2, 'VC', 1.86, 13.6, 6.5, 5.7)
+c_eth = Component(5, 0.2, 'VC', 1.86, 13.6, 6.5, 5.7)
+
+biomass = Biomass(40, 0.024, 1.2)
 
 all_comp = [c_pce, c_tce, c_tce, c_vc]
 
@@ -33,11 +37,11 @@ def mult_five(y, t, params):
     S_PCE, S_TCE, S_DCE, S_VC, S_ETH, X = y
     umax_PCE, umax_TCE, umax_DCE, umax_VC, umax_ETH, Ks_PCE, Ks_TCE, Ks_DCE, Ks_VC, Ks_ETH, Kci_PCE, Kci_TCE, Kci_DCE, Khi_TCE, Khi_DCE, Khi_VC, yieldmass, death_rate = params
     S_all = S_PCE + S_TCE + S_DCE + S_VC + S_ETH
-    c_pce = Component(S_PCE, 'PCE', umax_PCE, Ks_PCE, Kci_PCE)
-    c_tce = Component(S_TCE, 'TCE', umax_TCE, Ks_TCE, Kci_TCE, Khi_TCE)
-    c_dce = Component(S_DCE, 'DCE', umax_DCE, Ks_DCE, Kci_DCE, Khi_DCE)
-    c_vc = Component(S_VC, 'VC', umax_VC, Ks_VC, None, Khi_VC)
-    c_eth = Component(S_ETH, 'VC', umax_ETH, Ks_ETH)
+    c_pce = Component(1, S_PCE, 'PCE', umax_PCE, Ks_PCE, Kci_PCE)
+    c_tce = Component(2, S_TCE, 'TCE', umax_TCE, Ks_TCE, Kci_TCE, Khi_TCE)
+    c_dce = Component(3, S_DCE, 'DCE', umax_DCE, Ks_DCE, Kci_DCE, Khi_DCE)
+    c_vc = Component(4, S_VC, 'VC', umax_VC, Ks_VC, None, Khi_VC)
+    c_eth = Component(5, S_ETH, 'VC', umax_ETH, Ks_ETH)
     all_comp = [c_pce, c_tce, c_tce, c_vc, c_eth]
     iscompetiting = [{c_pce: []}, {c_tce: [c_pce]}, {c_dce: [c_tce]}, {c_vc: [c_tce, c_dce]}]
     ishaldane = [{c_pce: []}, {c_tce: [c_tce]}, {c_dce: [c_dce]}, {c_vc: [c_vc]}]
@@ -62,7 +66,7 @@ S_TCE_init = 0
 S_DCE_init = 0
 S_VC_init = 0
 S_ETH_init = 0
-X_init = 13
+X_init = 40
 y0 = [S_PCE_init, S_TCE_init, S_DCE_init, S_VC_init, S_ETH_init, X_init]
 umax_PCE = 13.3
 umax_TCE = 124
@@ -86,7 +90,7 @@ death_rate = 0.024
 params = [umax_PCE, umax_TCE, umax_DCE, umax_VC, umax_ETH, Ks_PCE, Ks_TCE, Ks_DCE, Ks_VC, Ks_ETH, Kci_PCE, Kci_TCE,
           Kci_DCE, Khi_TCE, Khi_DCE, Khi_VC, yieldmass, death_rate]
 
-tStop = 1.2
+tStop = 6
 tInc = 0.01
 t = np.arange(0., tStop, tInc)
 
@@ -113,3 +117,18 @@ ax1.set_ylabel('concentration')
 plt.legend(loc="upper right")
 
 plt.show()
+
+fig, ax2 = plt.subplots()
+ax2.plot(t, soln_X, label='X')
+ax2.set_xlabel('time')
+ax2.set_ylabel('concentration')
+plt.legend(loc="upper right")
+
+plt.show()
+
+import itertools
+
+a = [['a', 'b'], ['c']]
+print(list(itertools.chain.from_iterable(a)))
+solve = Solver(all_comp, biomass, iscompetiting, ishaldane, None, react_to_react, react_to_product)
+solve.getProducts(c_eth)

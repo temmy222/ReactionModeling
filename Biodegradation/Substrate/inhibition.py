@@ -4,22 +4,24 @@ class Inhibition(object):
 
     def computeCompetitiveInhibition(self, component):
         temp = self.getRelevantDict(self.solution.isCompeting, component)
-        inhibitives = temp[component]
         starter = 0
-        if len(temp[component]) != 0:
-            for i in range(len(inhibitives)):
-                interm = inhibitives[i]
-                starter = starter + ((component.ks * interm.conc) / interm.kci)
+        if temp is not None:
+            inhibitives = temp[component]
+            if len(temp[component]) != 0:
+                for i in range(len(inhibitives)):
+                    interm = inhibitives[i]
+                    starter = starter + ((component.ks * interm.conc) / interm.kci)
         return starter
 
     def computeHaldaneInhibition(self, component):
         temp = self.getRelevantDict(self.solution.isHaldane, component)
-        haldanes = temp[component]
         starter = 0
-        if len(temp[component]) != 0:
-            for i in range(len(haldanes)):
-                interm = haldanes[i]
-                starter = starter + ((component.conc ** 2) / interm.khi)
+        if temp is not None:
+            haldanes = temp[component]
+            if len(temp[component]) != 0:
+                for i in range(len(haldanes)):
+                    interm = haldanes[i]
+                    starter = starter + ((component.conc ** 2) / interm.khi)
         return starter
 
     def computeNonCompetitiveInhibition(self, component):
@@ -39,6 +41,7 @@ class Inhibition(object):
         return outputt
 
     def getRelevantDict(self, all_values, component):
+        outputt = None
         if type(all_values) == list:
             for i in range(len(all_values)):
                 temp = list(all_values[i].keys())[0]
