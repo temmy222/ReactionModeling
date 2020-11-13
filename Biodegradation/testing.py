@@ -61,29 +61,29 @@ def mult_five(y, t, params):
     return derivs
 
 
-S_PCE_init = 92
+S_PCE_init = 282
 S_TCE_init = 0
 S_DCE_init = 0
 S_VC_init = 0
 S_ETH_init = 0
-X_init = 40
+X_init =40
 y0 = [S_PCE_init, S_TCE_init, S_DCE_init, S_VC_init, S_ETH_init, X_init]
-umax_PCE = 13.3
-umax_TCE = 124
-umax_DCE = 22
-umax_VC = 2.44
+umax_PCE = 12.4
+umax_TCE = 125
+umax_DCE = 13.8
+umax_VC = 8.08
 umax_ETH = 1
-Ks_PCE = 3.86
-Ks_TCE = 2.76
-Ks_DCE = 1.9
-Ks_VC = 602
+Ks_PCE = 1.63
+Ks_TCE = 1.80
+Ks_DCE = 1.76
+Ks_VC = 62.6
 Ks_ETH = 1
-Kci_PCE = 3.86
-Kci_TCE = 2.76
-Kci_DCE = 1.90
+Kci_PCE = 1.63
+Kci_TCE = 1.80
+Kci_DCE = 1.76
 Khi_TCE = 900
-Khi_DCE = 6000
-Khi_VC = 7000
+Khi_DCE = 750
+Khi_VC = 750
 yieldmass = 0.006
 death_rate = 0.024
 
@@ -126,9 +126,9 @@ plt.legend(loc="upper right")
 
 plt.show()
 
-import itertools
-
-a = [['a', 'b'], ['c']]
-print(list(itertools.chain.from_iterable(a)))
-solve = Solver(all_comp, biomass, iscompetiting, ishaldane, None, react_to_react, react_to_product)
-solve.getProducts(c_eth)
+# import itertools
+#
+# a = [['a', 'b'], ['c']]
+# print(list(itertools.chain.from_iterable(a)))
+# solve = Solver(all_comp, biomass, iscompetiting, ishaldane, None, react_to_react, react_to_product)
+# solve.getProducts(c_eth)
