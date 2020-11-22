@@ -26,31 +26,24 @@ react_to_product = [{c_pce: []}, {c_tce: [c_pce]}, {c_dce: [c_tce]}, {c_vc: [c_d
 biomass = Biomass(40, 0.024, 0.006)
 biomasses = [biomass]
 solver_class = Solver(all_components, biomasses, iscompetiting, ishaldane, None, react_to_react, react_to_product)
-tStop = 6
-tInc = 0.01
+tStop = 2
+tInc = 1
 t = np.arange(0., tStop, tInc)
 
+# soln = Solution(all_components, iscompetiting, ishaldane)
+# inhibit = Inhibition(soln)
 
-soln = Solution(all_components, iscompetiting, ishaldane)
-inhibit = Inhibition(soln)
-
-
-
-monod_PCE = Monod().growth_rate_new(c_pce, inhibit)
-monod_DCE = Monod().growth_rate_new(c_dce, inhibit)
-monod_TCE = Monod().growth_rate_new(c_tce, inhibit)
-monod_VC = Monod().growth_rate_new(c_vc, inhibit)
-monod_ETH = Monod().growth_rate_new(c_eth, inhibit)
+# monod_PCE = Monod().growth_rate_new(c_pce, inhibit)
+# monod_DCE = Monod().growth_rate_new(c_dce, inhibit)
+# monod_TCE = Monod().growth_rate_new(c_tce, inhibit)
+# monod_VC = Monod().growth_rate_new(c_vc, inhibit)
+# monod_ETH = Monod().growth_rate_new(c_eth, inhibit)
 
 # print(-monod_VC * biomass.init_conc + monod_DCE * biomass.init_conc)
 # print(solver_class.computeDerivative(solver_class.getReactants(c_vc), solver_class.getProducts(c_vc), all_components, biomass.init_conc))
 
 
-
-
-
-
-psoln = solver_class.solve(6, 0.01)
+psoln = solver_class.solve(tStop, tInc)
 
 fig, ax1 = plt.subplots()
 soln_PCE = psoln[:, 0]

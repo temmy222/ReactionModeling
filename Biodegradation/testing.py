@@ -44,29 +44,38 @@ def mult_five(y, t, params):
     c_eth = Component(5, S_ETH, 'VC', umax_ETH, Ks_ETH)
     all_comp = [c_pce, c_tce, c_tce, c_vc, c_eth]
     iscompetiting = [{c_pce: []}, {c_tce: [c_pce]}, {c_dce: [c_tce]}, {c_vc: [c_tce, c_dce]}]
-    ishaldane = [{c_pce: []}, {c_tce: [c_tce]}, {c_dce: [c_dce]}, {c_vc: [c_vc]}]
+    ishaldane = [{c_pce: []}, {c_tce: [c_tce]}, {c_dce: [c_dce]}, {c_vc: []}]
     soln = Solution(all_comp, iscompetiting, ishaldane)
     inhibit = Inhibition(soln)
     monod_PCE = Monod().growth_rate_new(c_pce, inhibit)
     monod_DCE = Monod().growth_rate_new(c_dce, inhibit)
     monod_TCE = Monod().growth_rate_new(c_tce, inhibit)
     monod_VC = Monod().growth_rate_new(c_vc, inhibit)
+    # derivs = [-monod_PCE * X,
+    #           -monod_TCE * X + monod_PCE * X,
+    #           -monod_DCE * X + monod_TCE * X,
+    #           -monod_VC * X + monod_DCE * X,
+    #           monod_VC * X,
+    #           yieldmass * S_all - death_rate * X
+    #           ]
     derivs = [-monod_PCE * X,
-              -monod_TCE * X + monod_PCE * X,
-              -monod_DCE * X + monod_TCE * X,
-              -monod_VC * X + monod_DCE * X,
-              monod_VC * X,
-              yieldmass * S_all - death_rate * X
-              ]
+                  -monod_TCE * X,
+                  -monod_DCE * X,
+                  -monod_VC * X,
+                  monod_VC * X + monod_PCE * X + monod_TCE * X + monod_DCE * X,
+                  yieldmass * S_all - death_rate * X
+                  ]
+
+    # print(monod_PCE, monod_TCE, monod_DCE, monod_VC)
     return derivs
 
 
-S_PCE_init = 282
-S_TCE_init = 0
-S_DCE_init = 0
-S_VC_init = 0
+S_PCE_init = 2600000
+S_TCE_init = 2600000
+S_DCE_init = 2600000
+S_VC_init = 2600000
 S_ETH_init = 0
-X_init =40
+X_init = 40
 y0 = [S_PCE_init, S_TCE_init, S_DCE_init, S_VC_init, S_ETH_init, X_init]
 umax_PCE = 12.4
 umax_TCE = 125
@@ -90,8 +99,8 @@ death_rate = 0.024
 params = [umax_PCE, umax_TCE, umax_DCE, umax_VC, umax_ETH, Ks_PCE, Ks_TCE, Ks_DCE, Ks_VC, Ks_ETH, Kci_PCE, Kci_TCE,
           Kci_DCE, Khi_TCE, Khi_DCE, Khi_VC, yieldmass, death_rate]
 
-tStop = 6
-tInc = 0.01
+tStop = 1000
+tInc = 0.001
 t = np.arange(0., tStop, tInc)
 
 psoln = odeint(mult_five, y0, t, args=(params,))
@@ -118,13 +127,13 @@ plt.legend(loc="upper right")
 
 plt.show()
 
-fig, ax2 = plt.subplots()
-ax2.plot(t, soln_X, label='X')
-ax2.set_xlabel('time')
-ax2.set_ylabel('concentration')
-plt.legend(loc="upper right")
-
-plt.show()
+# fig, ax2 = plt.subplots()
+# ax2.plot(t, soln_X, label='X')
+# ax2.set_xlabel('time')
+# ax2.set_ylabel('concentration')
+# plt.legend(loc="upper right")
+#
+# plt.show()
 
 # import itertools
 #

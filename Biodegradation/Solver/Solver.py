@@ -45,6 +45,7 @@ class Solver(object):
         soln = Solution(all_components, self.iscompeting, self.ishaldane, self.isnoncompetiting)
         inhibit = Inhibition(soln)
         monods = self.computeAllMonods(all_components, inhibit)
+        print(monods)
         reac = 0
         prod = 0
         if len(reactants) != 0:
@@ -100,8 +101,8 @@ class Solver(object):
         for component in all_comp:
             derivative = self.computeDerivative(self.getReactants(component), self.getProducts(component), all_comp, X)
             deriv.append(derivative)
-            if component.name =='ETH':
-                print(derivative)
+            # if component.name =='PCE':
+            #     print(derivative)
         deriv.append(yieldmass * S_all - death_rate * X)
         return deriv
 
