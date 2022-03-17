@@ -48,32 +48,32 @@ def mult_five(y, t, params):
     soln = Solution(all_comp, iscompetiting, ishaldane)
     inhibit = Inhibition(soln)
     monod_PCE = Monod().growth_rate_new(c_pce, inhibit)
-    monod_DCE = Monod().growth_rate_new(c_dce, inhibit)
     monod_TCE = Monod().growth_rate_new(c_tce, inhibit)
+    monod_DCE = Monod().growth_rate_new(c_dce, inhibit)
     monod_VC = Monod().growth_rate_new(c_vc, inhibit)
-    # derivs = [-monod_PCE * X,
-    #           -monod_TCE * X + monod_PCE * X,
-    #           -monod_DCE * X + monod_TCE * X,
-    #           -monod_VC * X + monod_DCE * X,
-    #           monod_VC * X,
-    #           yieldmass * S_all - death_rate * X
-    #           ]
     derivs = [-monod_PCE * X,
-                  -monod_TCE * X,
-                  -monod_DCE * X,
-                  -monod_VC * X,
-                  monod_VC * X + monod_PCE * X + monod_TCE * X + monod_DCE * X,
-                  yieldmass * S_all - death_rate * X
-                  ]
+              -monod_TCE * X + monod_PCE * X,
+              -monod_DCE * X + monod_TCE * X,
+              -monod_VC * X + monod_DCE * X,
+              monod_VC * X,
+              yieldmass * S_all - death_rate * X
+              ]
+    # derivs = [-monod_PCE * X,
+    #               -monod_TCE * X,
+    #               -monod_DCE * X,
+    #               -monod_VC * X,
+    #               monod_VC * X + monod_PCE * X + monod_TCE * X + monod_DCE * X,
+    #               yieldmass * S_all - death_rate * X
+    #               ]
 
     # print(monod_PCE, monod_TCE, monod_DCE, monod_VC)
     return derivs
 
 
-S_PCE_init = 2600000
-S_TCE_init = 2600000
-S_DCE_init = 2600000
-S_VC_init = 2600000
+S_PCE_init = 282
+S_TCE_init = 0
+S_DCE_init = 0
+S_VC_init = 0
 S_ETH_init = 0
 X_init = 40
 y0 = [S_PCE_init, S_TCE_init, S_DCE_init, S_VC_init, S_ETH_init, X_init]
@@ -92,7 +92,7 @@ Kci_TCE = 1.80
 Kci_DCE = 1.76
 Khi_TCE = 900
 Khi_DCE = 750
-Khi_VC = 750
+Khi_VC = 0.750
 yieldmass = 0.006
 death_rate = 0.024
 
@@ -115,15 +115,18 @@ soln_DCE = psoln[:, 2]
 soln_VC = psoln[:, 3]
 soln_ETH = psoln[:, 4]
 soln_X = psoln[:, 5]
+big_T = t.reshape((len(t),1))
+# ax1.plot(t, soln_PCE,'r--', label='PCE', marker = 'D',markevery=500, markersize=5)
 ax1.plot(t, soln_PCE, label='PCE')
-ax1.plot(t, soln_TCE, label='TCE')
+ax1.plot(t, soln_TCE,  label='TCE')
 ax1.plot(t, soln_DCE, label='DCE')
 ax1.plot(t, soln_VC, label='VC')
 ax1.plot(t, soln_ETH, label='ETH')
 ax1.plot(t, soln_X, label='X')
-ax1.set_xlabel('time')
-ax1.set_ylabel('concentration')
+ax1.set_xlabel('Time (days)')
+ax1.set_ylabel('Concentration ($\mu M$)')
 plt.legend(loc="upper right")
+fig.savefig('PCE_validation.png', bbox_inches='tight', dpi=600)
 
 plt.show()
 

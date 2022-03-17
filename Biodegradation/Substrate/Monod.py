@@ -47,5 +47,6 @@ class Monod(object):
         haldane = inhibition.computeHaldaneInhibition(component)
         numerator = (component.umax * component.conc)
         denominator = (component.ks + competitive + component.conc + haldane) * non_competitive
+        # denominator = (component.ks + component.ks*competitive + component.conc + component.conc*haldane) * non_competitive
         growth = numerator/denominator
         return growth
