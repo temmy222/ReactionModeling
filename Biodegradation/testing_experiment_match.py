@@ -9,6 +9,8 @@ from Biodegradation.Substrate.inhibition import Inhibition
 from Biodegradation.Substrate.solution import Solution
 from Biodegradation.Substrate.substrate import Component
 
+print(2**12 % 13)
+print(3**7 % 7)
 c_pce = Component(1, 0.2, 'PCE', 0.86, 13.6, 4.5, 5.7)
 c_tce = Component(2, 0.29, 'TCE', 0.86, 33.6, 4.5, 5.7)
 c_dce = Component(3, 0.2, 'DCE', 0.86, 23.6, 6.5, 5.7)
